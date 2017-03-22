@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using aspnetcore_rest_api.Data;
 using aspnetcore_rest_api.Middleware;
 using aspnetcore_rest_api.Middleware.DataModels;
 using Microsoft.AspNetCore.Builder;
@@ -10,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+
+using aspnetcore_rest_api.Models;
 
 namespace aspnetcore_rest_api
 {
@@ -33,8 +37,11 @@ namespace aspnetcore_rest_api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase());
             // Add framework services.
             services.AddMvc();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,8 +61,34 @@ namespace aspnetcore_rest_api
             };
 
             app.UseMiddleware<TokenProviderMiddleware>(Options.Create(jwtOptions));
+            
+            var context = app.ApplicationServices.GetService<AppDbContext>();
+            AddTestData(context);
 
             app.UseMvc();
+
+            app.UseSwaggerGen();
+            app.UseSwaggerUi();
+        }
+
+        private static void AddTestData(AppDbContext context)
+        {
+            context.Users.Add(new DbUser(){
+                Id = 17,
+                FirstName = "Luke",
+                LastName = "Solo"
+            });
+            context.Users.Add(new DbUser(){
+                Id = 13,
+                FirstName = "Yasha",
+                LastName = "Liu"
+            });
+            context.Users.Add(new DbUser(){
+                Id = 19,
+                FirstName = "Lily",
+                LastName = "Huang"
+            });
+            context.SaveChanges();
         }
     }
 }

@@ -1,3 +1,9 @@
+RESTful API Development for ASP.NET Core
+https://www.youtube.com/watch?v=KCNUcuy8dMw&t=1612s
+
+Building Secure Web APIs with ASP.NET Core
+https://www.youtube.com/watch?v=e2qZvabmSvo
+
 Bearer Token Authentication in ASP.NET Core
 https://blogs.msdn.microsoft.com/webdev/2016/10/27/bearer-token-authentication-in-asp-net-core/
 
